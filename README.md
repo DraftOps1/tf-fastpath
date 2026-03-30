@@ -129,3 +129,5 @@ Reason: data source + IAM policy touched
 ## Current status
 
 この repository は立ち上げ段階です。まずは problem statement、CLI skeleton、索引構築、preview / gate の最小実装から進めます。
+
+初期の設計と CLI の足場固めが完了したため、次は派生データの schema と index pipeline を優先して進めます。
