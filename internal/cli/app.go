@@ -148,8 +148,8 @@ func commands() []command {
 		},
 		{
 			name:        "preview",
-			summary:     "return a fast, non-authoritative preview from local changes",
-			description: "Estimate affected addresses and render a fast preview without replacing the authoritative full plan.",
+			summary:     "return a fast preview that is usually sufficient for merge decisions",
+			description: "Estimate affected addresses and render the default preview used for most merge decisions without waiting for a full plan.",
 		},
 		{
 			name:        "verify",
@@ -158,8 +158,8 @@ func commands() []command {
 		},
 		{
 			name:        "gate",
-			summary:     "run the authoritative plan before merge or apply",
-			description: "Execute the final gate that remains authoritative for merge and apply decisions.",
+			summary:     "optionally run the full plan when teams want extra certainty",
+			description: "Execute the slower full plan only when preview confidence is not enough for a merge decision.",
 		},
 	}
 

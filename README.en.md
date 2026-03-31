@@ -27,7 +27,7 @@ Large Terraform and OpenTofu environments often spend most of their time in stat
 - infer likely affected resource addresses from changed files
 - compute dependency closure and blast radius
 - run `terraform plan -json -refresh=false` for a fast provisional preview
-- move heavyweight full plans to pre-merge, pre-apply, and scheduled verification
+- use preview as the normal merge signal and reserve heavyweight full plans for uncertain cases
 
 ## Command model
 
@@ -43,12 +43,12 @@ Build the derived data set.
 
 ### `tf-fastpath preview`
 
-Return a fast provisional preview.
+Return a fast authoritative preview.
 
 - collect changed files from `git diff`
 - infer likely affected resource addresses
 - compute blast radius
-- run `terraform plan -json -refresh=false` and summarize the preview
+- run `terraform plan -json -refresh=false` and use that preview for merge decisions
 
 ### `tf-fastpath verify`
 
@@ -60,19 +60,19 @@ Run validation that supports preview confidence.
 
 ### `tf-fastpath gate`
 
-Run the authoritative check before merge or apply.
+Run an extra full plan only when teams need more certainty.
 
-- always execute the normal `terraform plan`
+- execute the normal `terraform plan` only when needed
 - compare preview output against gate output
-- treat gate as the final authority for merge and apply decisions
+- prefer preview when confidence is already high
 
 ## Authoritative boundary
 
 The project is explicit about its boundary.
 
-- Terraform or OpenTofu state plus a normal full plan remain authoritative
-- `preview` is fast but provisional
-- `gate` is the only command that should drive merge or apply decisions
+- Terraform or OpenTofu state remains authoritative
+- `preview` is the primary signal for normal merge decisions
+- `gate` is an escalation path for low-confidence cases
 
 ## Non-goals
 
@@ -80,7 +80,7 @@ The project is explicit about its boundary.
 
 - replace the Terraform backend
 - move the source-of-truth state into a new storage model
-- present preview as equivalent to an authoritative plan
+- require a full plan for every merge decision
 - rely on routine `-target` usage
 - guarantee high preview accuracy in high-drift environments
 
