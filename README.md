@@ -29,7 +29,7 @@ Graph-aware fast preview and authoritative gate workflow for Terraform and OpenT
 - 変更ファイルから影響を受けそうな resource address を推定する
 - 依存 closure を使って blast radius を見積もる
 - `terraform plan -json -refresh=false` を使って高速な preview を返す
-- 重い full plan は merge 前、apply 前、定期 verify に寄せる
+- preview を通常の merge 判定に使い、重い full plan は不確実なケースに寄せる
 
 ## Command model
 
@@ -45,12 +45,12 @@ Graph-aware fast preview and authoritative gate workflow for Terraform and OpenT
 
 ### `tf-fastpath preview`
 
-高速な暫定 preview を返します。
+高速な authoritative preview を返します。
 
 - `git diff` から変更ファイルを取る
 - 影響を受けそうな resource address 群を推定する
 - blast radius を計算する
-- `terraform plan -json -refresh=false` を実行して preview を返す
+- `terraform plan -json -refresh=false` を実行して merge 判定に使う preview を返す
 
 ### `tf-fastpath verify`
 
@@ -62,19 +62,19 @@ preview の信頼度を支える検証を行います。
 
 ### `tf-fastpath gate`
 
-merge 前 / apply 前の authoritative check です。
+必要な時だけ追加で実行する full plan です。
 
-- 必ず通常の `terraform plan` を実行する
+- 必要な時だけ通常の `terraform plan` を実行する
 - preview と gate の差分を比較して精度を評価する
-- 最終判定は gate を正とする
+- preview confidence が十分なら、通常は preview を優先する
 
 ## Authoritative boundary
 
 このプロジェクトの前提は明確です。
 
-- authoritative なのは Terraform / OpenTofu の state と通常の full plan です
-- `preview` は高速だが暫定です
-- `gate` だけが merge や apply の判断材料になります
+- authoritative なのは Terraform / OpenTofu の state です
+- `preview` は通常の merge 判断を支える primary signal です
+- `gate` は confidence が不足した時だけ使う escalation path です
 
 ## Non-goals
 
@@ -82,7 +82,7 @@ merge 前 / apply 前の authoritative check です。
 
 - Terraform backend を置き換えること
 - state の正本を別の保存形式へ移すこと
-- preview を authoritative plan と同等だと主張すること
+- どんな変更でも必ず full plan を待つこと
 - routine use の `-target` に依存すること
 - drift が激しい環境でも常に高精度だと保証すること
 

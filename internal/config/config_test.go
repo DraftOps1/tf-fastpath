@@ -38,8 +38,6 @@ func TestLoadEnvOverrides(t *testing.T) {
 
 	env := map[string]string{
 		"TFFASTPATH_WORKING_DIR":     "/repo/envdir",
-		"TFFASTPATH_DATA_DIR":        "/cache/tf-fastpath",
-		"TFFASTPATH_SQLITE_PATH":     "/cache/state.db",
 		"TFFASTPATH_TERRAFORM_BIN":   "/usr/local/bin/terraform",
 		"TFFASTPATH_OPENTOFU_BIN":    "/usr/local/bin/tofu",
 		"TFFASTPATH_GIT_BIN":         "/usr/bin/git",
@@ -56,12 +54,6 @@ func TestLoadEnvOverrides(t *testing.T) {
 
 	if cfg.WorkingDir != "/repo/envdir" {
 		t.Fatalf("WorkingDir = %q", cfg.WorkingDir)
-	}
-	if cfg.DataDir != "/cache/tf-fastpath" {
-		t.Fatalf("DataDir = %q", cfg.DataDir)
-	}
-	if cfg.SQLitePath != "/cache/state.db" {
-		t.Fatalf("SQLitePath = %q", cfg.SQLitePath)
 	}
 	if cfg.TerraformBin != "/usr/local/bin/terraform" {
 		t.Fatalf("TerraformBin = %q", cfg.TerraformBin)

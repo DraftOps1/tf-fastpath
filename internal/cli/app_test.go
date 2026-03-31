@@ -34,7 +34,7 @@ func TestRunCommandHelp(t *testing.T) {
 	if !errors.Is(err, ErrHelpRequested) {
 		t.Fatalf("error = %v, want ErrHelpRequested", err)
 	}
-	if !strings.Contains(stdout.String(), "non-authoritative preview") {
+	if !strings.Contains(stdout.String(), "usually sufficient for merge decisions") {
 		t.Fatalf("stdout = %q", stdout.String())
 	}
 }

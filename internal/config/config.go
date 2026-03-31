@@ -37,7 +37,7 @@ func Load(lookupEnv func(string) string, getwd func() (string, error)) (Config, 
 		GitBin:         envOr(lookupEnv, "TFFASTPATH_GIT_BIN", "git"),
 		DefaultRuntime: envOr(lookupEnv, "TFFASTPATH_DEFAULT_RUNTIME", "terraform"),
 	}
-	cfg.DataDir = envOr(lookupEnv, "TFFASTPATH_DATA_DIR", filepath.Join(cfg.WorkingDir, ".tf-fastpath"))
+	cfg.DataDir = envOr(lookupEnv, "TFFASTPATH_DATA_DIR", filepath.Join(workingDir, ".tf-fastpath"))
 	cfg.SQLitePath = envOr(lookupEnv, "TFFASTPATH_SQLITE_PATH", filepath.Join(cfg.DataDir, "tf-fastpath.sqlite3"))
 
 	return cfg, nil
